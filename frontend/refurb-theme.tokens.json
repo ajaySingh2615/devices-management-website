@@ -1,0 +1,375 @@
+{
+  "name": "Refurb-Ecom-Theme",
+  "version": "1.0.0",
+  "description": "Design tokens for a refurbished laptops & printers e-commerce site (React + Tailwind + external CSS). Includes light and dark modes.",
+  "tokens": {
+    "typography": {
+      "fontFamily": {
+        "sans": {
+          "value": "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
+        },
+        "heading": {
+          "value": "Manrope, Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial"
+        }
+      },
+      "fontSize": {
+        "xs": {
+          "value": "12px"
+        },
+        "sm": {
+          "value": "14px"
+        },
+        "base": {
+          "value": "16px"
+        },
+        "lg": {
+          "value": "18px"
+        },
+        "xl": {
+          "value": "20px"
+        },
+        "2xl": {
+          "value": "24px"
+        },
+        "3xl": {
+          "value": "30px"
+        },
+        "4xl": {
+          "value": "36px"
+        }
+      },
+      "lineHeight": {
+        "tight": {
+          "value": "1.15"
+        },
+        "snug": {
+          "value": "1.25"
+        },
+        "normal": {
+          "value": "1.5"
+        }
+      },
+      "letterSpacing": {
+        "tight": {
+          "value": "-0.01em"
+        },
+        "normal": {
+          "value": "0"
+        }
+      },
+      "features": {
+        "bodyDefaults": {
+          "value": "cv02, cv03, cv04, cv11, ss01, ss02"
+        },
+        "tabularNums": {
+          "value": "tnum 1"
+        }
+      }
+    },
+    "radius": {
+      "base": {
+        "value": "14px"
+      },
+      "lg": {
+        "value": "16px"
+      },
+      "xl": {
+        "value": "20px"
+      },
+      "2xl": {
+        "value": "24px"
+      }
+    },
+    "shadow": {
+      "soft": {
+        "value": "0 4px 14px rgba(2, 6, 23, 0.06)"
+      },
+      "card": {
+        "value": "0 8px 24px rgba(2, 6, 23, 0.08)"
+      }
+    },
+    "transition": {
+      "duration": {
+        "value": "200ms"
+      },
+      "timingFunction": {
+        "smooth": {
+          "value": "cubic-bezier(.2,.8,.2,1)"
+        }
+      }
+    },
+    "color": {
+      "modes": {
+        "light": {
+          "surface": {
+            "background": {
+              "value": "#F8FAFC"
+            },
+            "card": {
+              "value": "#FFFFFF"
+            },
+            "border": {
+              "value": "#E2E8F0"
+            }
+          },
+          "text": {
+            "base": {
+              "value": "#334155"
+            },
+            "muted": {
+              "value": "#64748B"
+            },
+            "invert": {
+              "value": "#FFFFFF"
+            }
+          },
+          "brand": {
+            "base": {
+              "value": "#14B8A6"
+            },
+            "hover": {
+              "value": "#0F766E"
+            },
+            "subtle": {
+              "value": "#5EEAD4"
+            },
+            "ring": {
+              "value": "#14B8A6"
+            }
+          },
+          "accent": {
+            "base": {
+              "value": "#F59E0B"
+            },
+            "text": {
+              "value": "#B45309"
+            },
+            "subtle": {
+              "value": "#FEF3C7"
+            }
+          },
+          "status": {
+            "success": {
+              "value": "#10B981"
+            },
+            "info": {
+              "value": "#3B82F6"
+            },
+            "danger": {
+              "value": "#EF4444"
+            }
+          }
+        },
+        "dark": {
+          "surface": {
+            "background": {
+              "value": "#0B1220"
+            },
+            "card": {
+              "value": "#0F172A"
+            },
+            "border": {
+              "value": "#233041"
+            }
+          },
+          "text": {
+            "base": {
+              "value": "#CBD5E1"
+            },
+            "muted": {
+              "value": "#94A3B8"
+            },
+            "invert": {
+              "value": "#FFFFFF"
+            }
+          },
+          "brand": {
+            "base": {
+              "value": "#22D3EE"
+            },
+            "hover": {
+              "value": "#0891B2"
+            },
+            "subtle": {
+              "value": "rgba(34, 211, 238, 0.18)"
+            },
+            "ring": {
+              "value": "#22D3EE"
+            }
+          },
+          "accent": {
+            "base": {
+              "value": "#FBBF24"
+            },
+            "text": {
+              "value": "#FFE8B5"
+            },
+            "subtle": {
+              "value": "#452B09"
+            }
+          },
+          "status": {
+            "success": {
+              "value": "#10B981"
+            },
+            "info": {
+              "value": "#60A5FA"
+            },
+            "danger": {
+              "value": "#F87171"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "button": {
+        "primary": {
+          "background": {
+            "value": "{color.modes.light.brand.base.value}"
+          },
+          "text": {
+            "value": "{color.modes.light.text.invert.value}"
+          },
+          "hoverBackground": {
+            "value": "{color.modes.light.brand.hover.value}"
+          },
+          "radius": {
+            "value": "{radius.xl.value}"
+          },
+          "shadow": {
+            "value": "{shadow.soft.value}"
+          },
+          "paddingX": {
+            "value": "16px"
+          },
+          "paddingY": {
+            "value": "10px"
+          }
+        },
+        "secondary": {
+          "background": {
+            "value": "{color.modes.light.surface.card.value}"
+          },
+          "text": {
+            "value": "{color.modes.light.text.base.value}"
+          },
+          "borderColor": {
+            "value": "{color.modes.light.surface.border.value}"
+          },
+          "radius": {
+            "value": "{radius.xl.value}"
+          },
+          "paddingX": {
+            "value": "16px"
+          },
+          "paddingY": {
+            "value": "10px"
+          }
+        },
+        "ghost": {
+          "background": {
+            "value": "transparent"
+          },
+          "text": {
+            "value": "{color.modes.light.text.base.value}"
+          },
+          "hoverBackground": {
+            "value": "rgba(94, 234, 212, 0.4)"
+          },
+          "radius": {
+            "value": "{radius.xl.value}"
+          }
+        }
+      },
+      "badge": {
+        "sale": {
+          "background": {
+            "value": "{color.modes.light.accent.subtle.value}"
+          },
+          "text": {
+            "value": "{color.modes.light.accent.text.value}"
+          },
+          "radius": {
+            "value": "10px"
+          },
+          "paddingX": {
+            "value": "10px"
+          },
+          "paddingY": {
+            "value": "6px"
+          },
+          "fontSize": {
+            "value": "{typography.fontSize.sm.value}"
+          },
+          "fontWeight": {
+            "value": "600"
+          }
+        }
+      },
+      "card": {
+        "background": {
+          "value": "{color.modes.light.surface.card.value}"
+        },
+        "borderColor": {
+          "value": "{color.modes.light.surface.border.value}"
+        },
+        "radius": {
+          "value": "{radius.2xl.value}"
+        },
+        "shadow": {
+          "value": "{shadow.card.value}"
+        },
+        "padding": {
+          "value": "16px"
+        }
+      },
+      "input": {
+        "background": {
+          "value": "{color.modes.light.surface.card.value}"
+        },
+        "text": {
+          "value": "{color.modes.light.text.base.value}"
+        },
+        "placeholder": {
+          "value": "{color.modes.light.text.muted.value}"
+        },
+        "borderColor": {
+          "value": "{color.modes.light.surface.border.value}"
+        },
+        "focusRing": {
+          "value": "rgba(20, 184, 166, 0.4)"
+        },
+        "radius": {
+          "value": "12px"
+        },
+        "paddingX": {
+          "value": "12px"
+        },
+        "paddingY": {
+          "value": "10px"
+        }
+      },
+      "price": {
+        "currentWeight": {
+          "value": "600"
+        },
+        "currentSize": {
+          "value": "{typography.fontSize.lg.value}"
+        },
+        "oldWeight": {
+          "value": "500"
+        },
+        "oldSize": {
+          "value": "{typography.fontSize.sm.value}"
+        },
+        "oldColor": {
+          "value": "{color.modes.light.text.muted.value}"
+        }
+      }
+    }
+  },
+  "notes": {
+    "usage": "Use tokens under color.modes.light for light theme and color.modes.dark for dark theme. Map to Tailwind via CSS variables or a plugin. Fonts: load Inter and Manrope from Google Fonts."
+  }
+}

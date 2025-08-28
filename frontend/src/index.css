@@ -1,0 +1,106 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Light mode colors */
+  --color-surface-background: #f8fafc;
+  --color-surface-card: #ffffff;
+  --color-surface-border: #e2e8f0;
+  --color-text-base: #334155;
+  --color-text-muted: #64748b;
+  --color-text-invert: #ffffff;
+  --color-brand-base: #14b8a6;
+  --color-brand-hover: #0f766e;
+  --color-brand-subtle: #5eead4;
+  --color-brand-ring: #14b8a6;
+  --color-accent-base: #f59e0b;
+  --color-accent-text: #b45309;
+  --color-accent-subtle: #fef3c7;
+  --color-status-success: #10b981;
+  --color-status-info: #3b82f6;
+  --color-status-danger: #ef4444;
+}
+
+.dark {
+  /* Dark mode colors */
+  --color-surface-background: #0b1220;
+  --color-surface-card: #0f172a;
+  --color-surface-border: #233041;
+  --color-text-base: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  --color-text-invert: #ffffff;
+  --color-brand-base: #22d3ee;
+  --color-brand-hover: #0891b2;
+  --color-brand-subtle: rgba(34, 211, 238, 0.18);
+  --color-brand-ring: #22d3ee;
+  --color-accent-base: #fbbf24;
+  --color-accent-text: #ffe8b5;
+  --color-accent-subtle: #452b09;
+  --color-status-success: #10b981;
+  --color-status-info: #60a5fa;
+  --color-status-danger: #f87171;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-surface-background text-text-base font-sans antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01", "ss02";
+    margin: 0;
+    padding: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-xl font-medium transition-all duration-200 ease-smooth;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-ring focus-visible:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply bg-brand-base text-text-invert shadow-soft;
+    @apply hover:bg-brand-hover;
+    padding: 10px 16px;
+  }
+
+  .btn-secondary {
+    @apply bg-surface-card text-text-base border border-surface-border;
+    @apply hover:bg-gray-50;
+    padding: 10px 16px;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-text-base;
+    @apply hover:bg-brand-subtle hover:bg-opacity-40;
+  }
+
+  .card {
+    @apply bg-surface-card border border-surface-border rounded-2xl shadow-card p-4;
+  }
+
+  .input {
+    @apply bg-surface-card text-text-base placeholder:text-text-muted;
+    @apply border border-surface-border rounded-xl px-3 py-2.5;
+    @apply focus:outline-none focus:ring-2 focus:ring-brand-ring focus:ring-opacity-40;
+  }
+
+  .badge-sale {
+    @apply bg-accent-subtle text-accent-text text-sm font-semibold;
+    @apply rounded-lg px-2.5 py-1.5;
+  }
+}
