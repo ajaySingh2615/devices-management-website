@@ -77,48 +77,57 @@ const Modal = ({
   } = getIconAndColors();
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black bg-opacity-50 transition-opacity"
+        className="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-sm animate-in fade-in duration-300"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="relative bg-surface-card rounded-2xl shadow-xl max-w-md w-full mx-4 transform transition-all">
+      <div className="relative bg-surface-card rounded-3xl shadow-2xl border border-surface-border max-w-md w-full transform transition-all animate-in zoom-in-95 slide-in-from-bottom-4 duration-300">
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1 text-text-muted hover:text-text-base transition-colors"
+          className="absolute top-4 right-4 p-2 text-text-muted hover:text-text-base hover:bg-surface-background rounded-full transition-all duration-200 hover:scale-110"
         >
-          <X size={20} />
+          <X size={18} />
         </button>
 
         {/* Content */}
-        <div className="p-6">
+        <div className="p-8">
           {/* Icon and Title */}
-          <div className="flex items-center space-x-3 mb-4">
+          <div className="flex items-start space-x-4 mb-6">
             {showIcon && (
               <div
-                className={`w-10 h-10 ${bgColor} rounded-full flex items-center justify-center`}
+                className={`w-12 h-12 ${bgColor} rounded-full flex items-center justify-center animate-in zoom-in-50 duration-500 delay-150 shadow-lg`}
               >
-                <IconComponent className="text-text-invert" size={24} />
+                <IconComponent className="text-text-invert" size={26} />
               </div>
             )}
-            <h3 className="font-heading font-semibold text-lg text-text-base">
-              {title}
-            </h3>
+            <div className="flex-1">
+              <h3 className="font-heading font-bold text-xl text-text-base mb-1 animate-in slide-in-from-left-5 duration-500 delay-200">
+                {title}
+              </h3>
+            </div>
           </div>
 
           {/* Message */}
-          <p className="text-text-muted mb-6 leading-relaxed">{message}</p>
+          <p className="text-text-muted mb-8 leading-relaxed text-base animate-in slide-in-from-left-5 duration-500 delay-300">
+            {message}
+          </p>
 
           {/* Actions */}
           {actions ? (
-            <div className="flex justify-end space-x-3">{actions}</div>
+            <div className="flex justify-end space-x-3 animate-in slide-in-from-bottom-5 duration-500 delay-400">
+              {actions}
+            </div>
           ) : (
-            <div className="flex justify-end">
-              <button onClick={onClose} className="btn btn-primary">
+            <div className="flex justify-end animate-in slide-in-from-bottom-5 duration-500 delay-400">
+              <button
+                onClick={onClose}
+                className="btn btn-primary min-w-[100px] transition-all duration-200 hover:scale-105 hover:shadow-lg focus:scale-105 focus:shadow-lg"
+              >
                 OK
               </button>
             </div>

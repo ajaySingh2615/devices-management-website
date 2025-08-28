@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 // import { useAuth } from "../../context/AuthContext"; // Using authService directly
 import Modal from "../../components/ui/Modal";
+import { ButtonSpinner } from "../../components/ui/LoadingSpinner";
 import { authService } from "../../services/auth";
 
 const Register = () => {
@@ -187,7 +188,7 @@ const Register = () => {
         </div>
 
         {/* Registration Form */}
-        <div className="card">
+        <div className="card animate-in slide-in-from-bottom-8 duration-500 delay-100">
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Username Field */}
             <div>
@@ -402,7 +403,7 @@ const Register = () => {
             >
               {isLoading ? (
                 <div className="flex items-center justify-center space-x-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-text-invert"></div>
+                  <ButtonSpinner />
                   <span>Creating account...</span>
                 </div>
               ) : (

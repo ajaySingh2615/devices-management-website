@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import Modal from "../../components/ui/Modal";
+import { ButtonSpinner } from "../../components/ui/LoadingSpinner";
 import { authService } from "../../services/auth";
 
 const Login = () => {
@@ -142,7 +143,7 @@ const Login = () => {
         </div>
 
         {/* Login Form */}
-        <div className="card">
+        <div className="card animate-in slide-in-from-bottom-8 duration-500 delay-100">
           {/* Login Method Toggle */}
           <div className="flex bg-surface-background rounded-lg p-1 mb-6">
             <button
@@ -260,7 +261,7 @@ const Login = () => {
             >
               {isLoading ? (
                 <div className="flex items-center justify-center space-x-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-text-invert"></div>
+                  <ButtonSpinner />
                   <span>Signing in...</span>
                 </div>
               ) : (
