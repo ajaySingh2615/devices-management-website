@@ -84,6 +84,19 @@ export const authService = {
     }
   },
 
+  resendEmailVerificationPublic: async (email) => {
+    try {
+      const response = await api.post("/auth/resend-verification-public", {
+        email,
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to resend verification email"
+      );
+    }
+  },
+
   // Forgot password request
   forgotPassword: async (email) => {
     try {

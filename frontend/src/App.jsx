@@ -85,6 +85,7 @@ const AppContent = () => {
           path="/auth/verify-email/:token?"
           element={<EmailVerification />}
         />
+        <Route path="/auth/verify-email" element={<EmailVerification />} />
 
         {/* Protected routes - require authentication */}
         <Route

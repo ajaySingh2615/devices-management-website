@@ -6,6 +6,7 @@ import {
   getCurrentUser,
   verifyEmail,
   resendEmailVerification,
+  resendEmailVerificationPublic,
   refreshAccessToken,
   forgotPasswordRequest,
   resetForgotPassword,
@@ -44,6 +45,12 @@ router.post(
   resendEmailVerificationValidator(),
   validate,
   resendEmailVerification,
+);
+router.post(
+  "/resend-verification-public",
+  resendEmailVerificationValidator(),
+  validate,
+  resendEmailVerificationPublic,
 );
 
 router.post(

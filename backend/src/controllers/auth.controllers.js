@@ -63,7 +63,7 @@ const registerUser = asyncHandler(async (req, res) => {
     subject: "Please verify your email address",
     mailGenContent: emailVerificationTemplate(
       user.username,
-      `${req.protocol}://${req.get("host")}/api/v1/users/verify-email/${unHashedToken}`,
+      `${req.protocol}://${req.get("host")}/api/v1/auth/verify-email/${unHashedToken}`,
     ),
   });
 
@@ -158,37 +158,74 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 
 const verifyEmail = asyncHandler(async (req, res) => {
   const { verificationToken } = req.params;
+  const frontendUrl =
+    process.env.CLIENT_SSR_BASE_URL || "http://localhost:5173";
   if (!verificationToken) {
-    throw new ApiError(400, "Email verification token is missing");
+    // Redirect to frontend with error
+    return res.redirect(`${frontendUrl}/auth/verify-email?error=missing-token`);
   }
 
-  const hashedToken = crypto
-    .createHash("sha256")
-    .update(verificationToken)
-    .digest("hex");
+  try {
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(verificationToken)
+      .digest("hex");
 
-  const user = await User.findOne({
-    emailVerificationToken: hashedToken,
-    emailVerificationTokenExpiry: { $gt: new Date() },
-  });
-  if (!user) {
-    throw new ApiError(400, "Invalid or expired verification token");
-  }
+    // First, check if user exists with this token (regardless of expiry)
+    const userWithToken = await User.findOne({
+      emailVerificationToken: hashedToken,
+    });
 
-  user.emailVerificationToken = undefined;
-  user.emailVerificationTokenExpiry = undefined;
-  user.isEmailVerified = true;
-  await user.save({ validateBeforeSave: false });
+    // Check if user exists but is already verified
+    if (userWithToken && userWithToken.isEmailVerified) {
+      console.log("User already verified, redirecting...");
+      return res.redirect(
+        `${frontendUrl}/auth/verify-email?error=already-verified`,
+      );
+    }
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { isEmailVerified: true },
-        "Email verified successfully",
-      ),
+    // Check if token exists but is expired
+    if (
+      userWithToken &&
+      userWithToken.emailVerificationTokenExpiry < new Date()
+    ) {
+      console.log("Token expired, redirecting...");
+      return res.redirect(
+        `${frontendUrl}/auth/verify-email?error=token-expired&email=${encodeURIComponent(userWithToken.email)}`,
+      );
+    }
+
+    // Now check for valid, non-expired token
+    const user = await User.findOne({
+      emailVerificationToken: hashedToken,
+      emailVerificationTokenExpiry: { $gt: new Date() },
+    });
+
+    if (!user) {
+      // Token doesn't exist or other issue
+      console.log("Invalid token, redirecting...");
+      return res.redirect(
+        `${frontendUrl}/auth/verify-email?error=invalid-token`,
+      );
+    }
+
+    // Success - verify the user
+    user.emailVerificationToken = undefined;
+    user.emailVerificationTokenExpiry = undefined;
+    user.isEmailVerified = true;
+    await user.save({ validateBeforeSave: false });
+
+    // Redirect to frontend with success
+    const successUrl = `${frontendUrl}/auth/verify-email?success=true&email=${encodeURIComponent(user.email)}`;
+    console.log("Redirecting to:", successUrl);
+    return res.redirect(successUrl);
+  } catch (error) {
+    console.error("Verification error:", error);
+    // Redirect to frontend with error
+    return res.redirect(
+      `${frontendUrl}/auth/verify-email?error=verification-failed`,
     );
+  }
 });
 
 const resendEmailVerification = asyncHandler(async (req, res) => {
@@ -212,13 +249,51 @@ const resendEmailVerification = asyncHandler(async (req, res) => {
     subject: "Please verify your email address",
     mailGenContent: emailVerificationTemplate(
       user.username,
-      `${req.protocol}://${req.get("host")}/api/v1/users/verify-email/${unHashedToken}`,
+      `${req.protocol}://${req.get("host")}/api/v1/auth/verify-email/${unHashedToken}`,
     ),
   });
 
   return res
     .status(200)
     .json(new ApiResponse(200, null, "Mail has been sent to your email"));
+});
+
+// Resend verification for non-authenticated users (for expired tokens)
+const resendEmailVerificationPublic = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    throw new ApiError(400, "Email is required");
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new ApiError(404, "User with this email does not exist");
+  }
+
+  if (user.isEmailVerified) {
+    throw new ApiError(400, "Email is already verified");
+  }
+
+  const { unHashedToken, hashedToken, tokenExpiry } =
+    user.generateTemporaryToken();
+
+  user.emailVerificationToken = hashedToken;
+  user.emailVerificationTokenExpiry = tokenExpiry;
+  await user.save({ validateBeforeSave: false });
+
+  await sendEmail({
+    email: user.email,
+    subject: "Please verify your email address",
+    mailGenContent: emailVerificationTemplate(
+      user.username,
+      `${req.protocol}://${req.get("host")}/api/v1/auth/verify-email/${unHashedToken}`,
+    ),
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, null, "New verification email has been sent"));
 });
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
@@ -347,6 +422,7 @@ export {
   getCurrentUser,
   verifyEmail,
   resendEmailVerification,
+  resendEmailVerificationPublic,
   refreshAccessToken,
   forgotPasswordRequest,
   resetForgotPassword,
