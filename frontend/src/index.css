@@ -203,6 +203,69 @@
     border-radius: 50%;
     mask: radial-gradient(circle at center, transparent 40%, black 41%);
   }
+
+  /* Modal premium effects */
+  .modal-premium {
+    background: linear-gradient(
+      135deg,
+      var(--color-surface-card) 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      var(--color-surface-card) 100%
+    );
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .modal-backdrop {
+    background: radial-gradient(
+      circle at center,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
+  }
+
+  /* Enhanced button animations */
+  .btn-premium {
+    background: linear-gradient(
+      135deg,
+      var(--color-brand-base) 0%,
+      var(--color-brand-hover) 100%
+    );
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-premium::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+    transform: rotate(45deg);
+    transition: all 0.6s ease;
+    opacity: 0;
+  }
+
+  .btn-premium:hover::before {
+    animation: shimmer-sweep 0.8s ease-out;
+    opacity: 1;
+  }
+
+  @keyframes shimmer-sweep {
+    0% {
+      transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+    100% {
+      transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
+  }
 }
 
 /* Custom scrollbar */

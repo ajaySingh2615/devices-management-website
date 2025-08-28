@@ -16,11 +16,11 @@ const LoadingSpinner = ({
   };
 
   const colorClasses = {
-    primary: "border-brand-base",
-    secondary: "border-text-muted",
-    white: "border-text-invert",
-    success: "border-status-success",
-    danger: "border-status-danger",
+    primary: "border-brand-base border-t-transparent",
+    secondary: "border-text-muted border-t-transparent",
+    white: "border-white border-t-transparent",
+    success: "border-status-success border-t-transparent",
+    danger: "border-status-danger border-t-transparent",
   };
 
   const textSizeClasses = {
@@ -35,40 +35,33 @@ const LoadingSpinner = ({
     <div className={`flex items-center space-x-2 ${className}`}>
       {/* Spinner */}
       <div className="relative">
-        {/* Outer ring */}
+        {/* Main spinning ring */}
         <div
           className={`
-            ${sizeClasses[size]} 
-            rounded-full 
-            border-2 
-            border-transparent 
-            ${colorClasses[color]} 
-            border-t-transparent 
-            animate-spin
-          `}
+             ${sizeClasses[size]} 
+             rounded-full 
+             border-2
+             ${colorClasses[color]}
+             animate-spin
+           `}
         />
-        {/* Inner ring for extra effect */}
+        {/* Inner glow effect */}
         <div
           className={`
-            absolute 
-            inset-1 
-            ${
-              size === "xs"
-                ? "inset-0.5"
-                : size === "sm"
-                ? "inset-0.5"
-                : "inset-1"
-            }
-            rounded-full 
-            border 
-            border-transparent 
-            ${colorClasses[color]} 
-            border-b-transparent 
-            animate-spin 
-            [animation-direction:reverse] 
-            [animation-duration:1.5s]
-            opacity-60
-          `}
+             absolute 
+             ${size === "xs" || size === "sm" ? "inset-0.5" : "inset-1"}
+             rounded-full 
+             border
+             border-transparent
+             ${
+               color === "white"
+                 ? "border-b-white/40"
+                 : "border-b-brand-base/40"
+             }
+             animate-spin 
+             [animation-direction:reverse] 
+             [animation-duration:1.5s]
+           `}
         />
       </div>
 
