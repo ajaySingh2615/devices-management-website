@@ -10,7 +10,9 @@ import {
   CheckCircle,
   Check,
 } from "lucide-react";
-import { useAuth } from "../../context/AuthContext";
+// import { useAuth } from "../../context/AuthContext"; // Using authService directly
+import Modal from "../../components/ui/Modal";
+import { authService } from "../../services/auth";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -24,8 +26,15 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [modalConfig, setModalConfig] = useState({
+    type: "info",
+    title: "",
+    message: "",
+    autoClose: false,
+  });
 
-  const { register } = useAuth();
+  // Using authService directly instead of useAuth to avoid global loading state
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -45,17 +54,37 @@ const Register = () => {
 
     // Validation
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      setModalConfig({
+        type: "error",
+        title: "Validation Error",
+        message:
+          "Passwords do not match. Please make sure both password fields are identical.",
+        autoClose: false,
+      });
+      setShowModal(true);
       return;
     }
 
     if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long");
+      setModalConfig({
+        type: "error",
+        title: "Password Too Short",
+        message:
+          "Password must be at least 6 characters long for security purposes.",
+        autoClose: false,
+      });
+      setShowModal(true);
       return;
     }
 
     if (formData.username.length < 3) {
-      setError("Username must be at least 3 characters long");
+      setModalConfig({
+        type: "error",
+        title: "Username Too Short",
+        message: "Username must be at least 3 characters long.",
+        autoClose: false,
+      });
+      setShowModal(true);
       return;
     }
 
@@ -68,22 +97,27 @@ const Register = () => {
         password: formData.password,
       };
 
-      await register(userData);
-      setSuccess(
-        "Registration successful! Please check your email to verify your account."
-      );
+      await authService.register(userData);
 
-      // Redirect to login after showing success message
-      setTimeout(() => {
-        navigate("/auth/login", {
-          state: {
-            message:
-              "Registration successful! Please check your email to verify your account.",
-          },
-        });
-      }, 3000);
+      // Show success modal
+      setModalConfig({
+        type: "success",
+        title: "Registration Successful!",
+        message:
+          "Your account has been created successfully! We have sent a verification email to your email address. Please check your email and click the verification link before logging in.",
+        autoClose: false,
+      });
+      setShowModal(true);
     } catch (err) {
-      setError(err.message || "Registration failed. Please try again.");
+      setModalConfig({
+        type: "error",
+        title: "Registration Failed",
+        message:
+          err.message ||
+          "Registration failed. Please try again or contact support if the problem persists.",
+        autoClose: false,
+      });
+      setShowModal(true);
     } finally {
       setIsLoading(false);
     }
@@ -154,22 +188,6 @@ const Register = () => {
 
         {/* Registration Form */}
         <div className="card">
-          {/* Error Message */}
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center space-x-2">
-              <AlertCircle className="text-status-danger" size={18} />
-              <span className="text-status-danger text-sm">{error}</span>
-            </div>
-          )}
-
-          {/* Success Message */}
-          {success && (
-            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center space-x-2">
-              <CheckCircle className="text-status-success" size={18} />
-              <span className="text-status-success text-sm">{success}</span>
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Username Field */}
             <div>
@@ -424,6 +442,22 @@ const Register = () => {
             ← Back to homepage
           </Link>
         </div>
+
+        {/* Modal for success/error messages */}
+        <Modal
+          isOpen={showModal}
+          onClose={() => {
+            setShowModal(false);
+            // If it's a success modal, redirect to login WITHOUT state message
+            if (modalConfig.type === "success") {
+              navigate("/auth/login");
+            }
+          }}
+          title={modalConfig.title}
+          message={modalConfig.message}
+          type={modalConfig.type}
+          autoClose={modalConfig.autoClose}
+        />
       </div>
     </div>
   );

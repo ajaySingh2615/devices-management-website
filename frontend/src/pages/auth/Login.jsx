@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   Eye,
@@ -9,6 +9,8 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import Modal from "../../components/ui/Modal";
+import { authService } from "../../services/auth";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -21,12 +23,35 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [modalConfig, setModalConfig] = useState({
+    type: "info",
+    title: "",
+    message: "",
+    autoClose: false,
+  });
 
-  const { login } = useAuth();
+  const { updateUser } = useAuth(); // We'll call authService directly and update context manually
   const navigate = useNavigate();
   const location = useLocation();
 
   const from = location.state?.from?.pathname || "/";
+
+  // Show registration success message if coming from registration
+  useEffect(() => {
+    if (location.state?.message) {
+      setModalConfig({
+        type: "success",
+        title: "Registration Complete",
+        message: location.state.message,
+        autoClose: false,
+      });
+      setShowModal(true);
+
+      // Clear the message from location state
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location.state, navigate, location.pathname]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,15 +77,29 @@ const Login = () => {
           : { username: formData.username }),
       };
 
-      await login(credentials);
-      setSuccess("Login successful! Redirecting...");
+      const response = await authService.login(credentials);
+      // Update the auth context with both user and authenticated state
+      updateUser(response.data.user);
 
-      // Small delay to show success message
-      setTimeout(() => {
-        navigate(from, { replace: true });
-      }, 1000);
+      // Show success modal
+      setModalConfig({
+        type: "success",
+        title: "Login Successful!",
+        message:
+          "Welcome back! You have successfully logged into your account.",
+        autoClose: false,
+      });
+      setShowModal(true);
     } catch (err) {
-      setError(err.message || "Login failed. Please try again.");
+      setModalConfig({
+        type: "error",
+        title: "Login Failed",
+        message:
+          err.message ||
+          "Invalid credentials. Please check your email/username and password and try again.",
+        autoClose: false,
+      });
+      setShowModal(true);
     } finally {
       setIsLoading(false);
     }
@@ -130,21 +169,7 @@ const Login = () => {
             </button>
           </div>
 
-          {/* Error Message */}
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center space-x-2">
-              <AlertCircle className="text-status-danger" size={18} />
-              <span className="text-status-danger text-sm">{error}</span>
-            </div>
-          )}
-
-          {/* Success Message */}
-          {success && (
-            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center space-x-2">
-              <CheckCircle className="text-status-success" size={18} />
-              <span className="text-status-success text-sm">{success}</span>
-            </div>
-          )}
+          {/* Messages now handled by modal */}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email/Username Field */}
@@ -275,6 +300,23 @@ const Login = () => {
             ← Back to homepage
           </Link>
         </div>
+
+        {/* Modal for success/error messages */}
+        <Modal
+          isOpen={showModal}
+          onClose={() => {
+            setShowModal(false);
+            // If it's a success modal, redirect to the intended page
+            if (modalConfig.type === "success") {
+              navigate(from, { replace: true });
+            }
+          }}
+          title={modalConfig.title}
+          message={modalConfig.message}
+          type={modalConfig.type}
+          autoClose={modalConfig.autoClose}
+          autoCloseDelay={1500}
+        />
       </div>
     </div>
   );
